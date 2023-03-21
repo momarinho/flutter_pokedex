@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_pokedex/functions/capitalize.dart';
 import 'package:http/http.dart' as http;
 
 import 'pokemon_details.dart';
@@ -70,14 +71,14 @@ class _PokedexScreenState extends State<PokedexScreen> {
           return Card(
             child: InkWell(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => PokemonDetailScreen(
-                //       pokemonUrl: pokemon['url'],
-                //     ),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PokemonDetailScreen(
+                      pokemonUrl: pokemon['url'],
+                    ),
+                  ),
+                );
               },
               child: Column(
                 children: [
@@ -90,7 +91,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      pokemon['name'],
+                      pokemon['name'].toString().capitalize(),
                       style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
