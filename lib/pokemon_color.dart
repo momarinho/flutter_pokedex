@@ -7,5 +7,5 @@ Color getRandomPokemonBackgroundColor() {
   final red = random.nextInt(256);
   final green = random.nextInt(256);
   final blue = random.nextInt(256);
-  return Color.fromARGB(50, red, green, blue);
+  return Color.fromARGB(195, red, green, blue);
 }

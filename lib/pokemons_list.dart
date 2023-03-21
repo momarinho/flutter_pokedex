@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'pokemon_color.dart';
 import 'pokemon_details.dart';
+import 'search_pokemons.dart';
 
 class PokedexScreen extends StatefulWidget {
   const PokedexScreen({Key? key}) : super(key: key);
@@ -66,18 +67,6 @@ class _PokedexScreenState extends State<PokedexScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pokedex'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: PokemonSearchDelegate(
-                    _filteredPokemonList, _filterPokemonList),
-              );
-            },
-            icon: const Icon(Icons.search),
-          ),
-        ],
       ),
       body: _isLoading
           ? const Center(
@@ -102,7 +91,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
                     padding: const EdgeInsets.all(8.0),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                      crossAxisCount: 3,
                       childAspectRatio: 1.2,
                       crossAxisSpacing: 8.0,
                       mainAxisSpacing: 8.0,
@@ -111,6 +100,8 @@ class _PokedexScreenState extends State<PokedexScreen> {
                     itemBuilder: (context, index) {
                       final pokemon = _filteredPokemonList[index];
                       final name = (pokemon['name']).toString().capitalize();
+                      final imageUrl =
+                          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png';
                       return InkWell(
                         onTap: () {
                           Navigator.push(
@@ -127,15 +118,31 @@ class _PokedexScreenState extends State<PokedexScreen> {
                             color: getRandomPokemonBackgroundColor(),
                             borderRadius: BorderRadius.circular(16.0),
                           ),
-                          child: Center(
-                            child: Text(
-                              name,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.network(
+                                imageUrl,
+                                width: 80.0,
+                                height: 80.0,
                               ),
-                            ),
+                              const SizedBox(height: 8.0),
+                              Text(
+                                name,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 4,
+                                      color: Colors.black,
+                                      offset: Offset(2, 2),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -145,88 +152,5 @@ class _PokedexScreenState extends State<PokedexScreen> {
               ],
             ),
     );
-  }
-}
-
-class PokemonSearchDelegate extends SearchDelegate<dynamic> {
-  final List<dynamic> pokemonList;
-  final Function(String) onFilter;
-
-  PokemonSearchDelegate(this.pokemonList, this.onFilter);
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-          onFilter('');
-        },
-        icon: const Icon(Icons.clear),
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, []);
-      },
-      icon: const Icon(Icons.arrow_back),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    onFilter(query);
-    return GridView.builder(
-      padding: const EdgeInsets.all(8.0),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.2,
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
-      ),
-      itemCount: pokemonList.length,
-      itemBuilder: (context, index) {
-        final pokemon = pokemonList[index];
-        final name = (pokemon['name']).toString().capitalize();
-
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PokemonDetailScreen(
-                  pokemonUrl: pokemon['url'],
-                ),
-              ),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: getRandomPokemonBackgroundColor(),
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            child: Center(
-              child: Text(
-                name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return const SizedBox.shrink();
   }
 }
