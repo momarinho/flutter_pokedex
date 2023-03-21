@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_pokedex/utils/capitalize.dart';
 import 'package:http/http.dart' as http;
 
 class PokemonDetailScreen extends StatefulWidget {
@@ -76,7 +77,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Name: ${_pokemonData['name']}',
+                'Name: ${_pokemonData['name'].toString().capitalize()}',
                 style: const TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
@@ -122,13 +123,10 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
             itemBuilder: (BuildContext context, int index) {
               final ability = _pokemonData['abilities'][index]['ability'];
               return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
                 elevation: 4.0,
                 child: Center(
                   child: Text(
-                    ability['name'],
+                    ability['name'].toString().capitalize(),
                     style: const TextStyle(fontSize: 18.0),
                   ),
                 ),
